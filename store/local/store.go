@@ -1,6 +1,10 @@
 package local
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+
+	"gorm.io/gorm"
+)
 
 type Store struct {
 	handler *gorm.DB
@@ -27,11 +31,13 @@ func (s *Store) execTx(fn func(*Manager) error) error {
 
 	err = fn(m)
 	if err != nil {
-		tx.Rollback()
+		if rbErr := tx.Rollback().Error; rbErr != nil {
+			return fmt.Errorf("tx err: %v, rb err: %v", err, rbErr)
+		}
 		return err
 	}
 
-	return nil
+	return tx.Commit().Error
 }
 
 type TransferTxParams struct {
