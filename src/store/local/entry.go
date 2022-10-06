@@ -16,18 +16,9 @@ type SimpleEntry struct {
 
 var entries = "entries"
 
-func (m *Manager) CreateEntry(entry SimpleEntry) (Entry, error) {
-	var new Entry
+func (m *Manager) CreateEntry(entry Entry) (Entry, error) {
 	err := m.handler.Table(entries).Create(&entry).Error
-	if err != nil {
-		return new, err
-	}
-
-	err = m.handler.Table(entries).Where("account_id = ? and amount = ?", entry.AccountID, entry.Amount).Take(&new).Error
-	if err != nil {
-		return new, err
-	}
-	return new, err
+	return entry, err
 }
 
 func (m *Manager) GetEntry(id int64) (Entry, error) {

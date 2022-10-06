@@ -18,18 +18,9 @@ type SimpleAccount struct {
 
 var accounts = "accounts"
 
-func (m *Manager) CreateAccount(account SimpleAccount) (Account, error) {
-	var new Account
+func (m *Manager) CreateAccount(account Account) (Account, error) {
 	err := m.handler.Table(accounts).Create(&account).Error
-	if err != nil {
-		return new, err
-	}
-
-	err = m.handler.Table(accounts).Where("owner = ? and balance = ? and currency = ?", account.Owner, account.Balance, account.Currency).Take(&new).Error
-	if err != nil {
-		return new, err
-	}
-	return new, err
+	return account, err
 }
 
 func (m *Manager) GetAccount(id int64) (Account, error) {
@@ -44,18 +35,8 @@ func (m *Manager) ListAccounts(limit, offset int) ([]Account, error) {
 	return list, err
 }
 
-func (m *Manager) UpdateAccount(id, balance int64) (Account, error) {
-	var new Account
-	err := m.handler.Table(accounts).Where("id = ?", id).Update("balance", balance).Error
-	if err != nil {
-		return new, err
-	}
-
-	err = m.handler.Table(accounts).Where("id = ?", id).Take(&new).Error
-	if err != nil {
-		return new, err
-	}
-	return new, nil
+func (m *Manager) UpdateAccount(id, balance int64) error {
+	return m.handler.Table(accounts).Where("id = ?", id).Update("balance", balance).Error
 }
 
 func (m *Manager) DeleteAccount(id int64) error {

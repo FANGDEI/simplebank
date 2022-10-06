@@ -18,18 +18,9 @@ type SimpleTransfer struct {
 
 var transfers = "transfers"
 
-func (m *Manager) CreateTransfer(transfer SimpleTransfer) (Transfer, error) {
-	var new Transfer
+func (m *Manager) CreateTransfer(transfer Transfer) (Transfer, error) {
 	err := m.handler.Table(transfers).Create(&transfer).Error
-	if err != nil {
-		return new, err
-	}
-
-	err = m.handler.Table(transfers).Where("from_account_id = ? and to_account_id = ?, amount = ?", transfer.FromAccountID, transfer.ToAccountID, transfer.Amount).Take(&new).Error
-	if err != nil {
-		return new, err
-	}
-	return new, err
+	return transfer, err
 }
 
 func (m *Manager) GetTransfer(id int64) (Transfer, error) {
