@@ -5,7 +5,7 @@ import "log"
 var handler *Manager
 
 func init() {
-	err := Init("../data/simplebank.json")
+	err := Init("./simplebank.json")
 	if err != nil {
 		log.Fatalln(err)
 	}
