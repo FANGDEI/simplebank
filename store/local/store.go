@@ -86,6 +86,37 @@ func (s *Store) TransferTx(arg TransferTxParams) (TransferTxResult, error) {
 		}
 
 		// TODO: update accounts' balance
+		account1, err := m.GetAccountForUpdate(arg.FromAccountID)
+		if err != nil {
+			return err
+		}
+
+		result.FromAccount, err = m.UpdateAccount(Account{
+			ID:        arg.FromAccountID,
+			Owner:     account1.Owner,
+			Balance:   account1.Balance - arg.Amount,
+			Currency:  account1.Currency,
+			CreatedAt: account1.CreatedAt,
+		})
+		if err != nil {
+			return err
+		}
+
+		account2, err := m.GetAccountForUpdate(arg.ToAccountID)
+		if err != nil {
+			return err
+		}
+
+		result.ToAccount, err = m.UpdateAccount(Account{
+			ID:        arg.ToAccountID,
+			Owner:     account2.Owner,
+			Balance:   account2.Balance + arg.Amount,
+			Currency:  account2.Currency,
+			CreatedAt: account2.CreatedAt,
+		})
+		if err != nil {
+			return err
+		}
 
 		return nil
 	})
