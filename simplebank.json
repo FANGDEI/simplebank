@@ -11,10 +11,12 @@
         "password": "secret",
         "time_zone": "Asia/Shanghai"
     },
+    "ecrypto": {
+        "secret": "simplebank"
+    },
     "gateway": {
         "host": "0.0.0.0",
         "port": 80,
-        "token_key": "0123456701234567",
-        "auth_exp": 24
+        "token_key": "simplebank"
     }
 }

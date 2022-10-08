@@ -3,37 +3,34 @@ package main
 import (
 	"log"
 
+	"github.com/FANGDEI/simplebank/ecrypto"
+	"github.com/FANGDEI/simplebank/gateway"
+	"github.com/FANGDEI/simplebank/store/cache"
 	"github.com/FANGDEI/simplebank/store/local"
 )
 
+func init() {
+	log.SetFlags(log.Llongfile)
+}
+
 func main() {
-	m, _ := local.NewStore()
+	var err error
 
-	errs := make(chan error)
-	results := make(chan local.TransferTxResult)
+	gateway.C.Cryptoer = ecrypto.New()
 
-	for i := 0; i < 5; i++ {
-		go func() {
-			result, err := m.TransferTx(local.TransferTxParams{
-				FromAccountID: 1,
-				ToAccountID:   2,
-				Amount:        10,
-			})
-
-			errs <- err
-			results <- result
-		}()
+	gateway.C.Localer, err = local.New()
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	for i := 0; i < 5; i++ {
-		err := <-errs
-		result := <-results
+	gateway.C.Cacher, err = cache.New()
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-		if err != nil {
-			log.Println(err)
-			log.Print(i)
-		}
-
-		log.Printf("%v %v\n", result.FromAccount.Balance, result.ToAccount.Balance)
+	m := gateway.New()
+	err = m.Run()
+	if err != nil {
+		log.Fatalln(err)
 	}
 }
