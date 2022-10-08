@@ -1,3 +1,6 @@
+server:
+	go run main.go
+
 createdb:
 	docker exec -it postgres createdb --username=root --owner=root simple_bank
 
