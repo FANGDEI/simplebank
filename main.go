@@ -7,6 +7,7 @@ import (
 	"github.com/FANGDEI/simplebank/gateway"
 	"github.com/FANGDEI/simplebank/store/cache"
 	"github.com/FANGDEI/simplebank/store/local"
+	"github.com/go-playground/validator/v10"
 )
 
 func init() {
@@ -17,6 +18,7 @@ func main() {
 	var err error
 
 	gateway.C.Cryptoer = ecrypto.New()
+	gateway.C.Validator = validator.New()
 
 	gateway.C.Localer, err = local.New()
 	if err != nil {

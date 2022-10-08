@@ -8,6 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/iris-contrib/middleware/cors v0.0.0-20221004221944-7386a93ab90a
 	github.com/iris-contrib/middleware/jwt v0.0.0-20221004221944-7386a93ab90a
+	github.com/kataras/iris v0.0.2
 	github.com/kataras/iris/v12 v12.2.0-beta5
 	github.com/stretchr/testify v1.8.0
 	github.com/wumansgy/goEncrypt v1.1.0
@@ -28,6 +29,9 @@ require (
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
+	github.com/go-playground/locales v0.14.0 // indirect
+	github.com/go-playground/universal-translator v0.18.0 // indirect
+	github.com/go-playground/validator/v10 v10.11.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/iris-contrib/jade v1.1.4 // indirect
@@ -50,6 +54,7 @@ require (
 	github.com/kataras/sitemap v0.0.6 // indirect
 	github.com/kataras/tunnel v0.0.4 // indirect
 	github.com/klauspost/compress v1.15.10 // indirect
+	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mailgun/raymond/v2 v2.0.46 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.20 // indirect

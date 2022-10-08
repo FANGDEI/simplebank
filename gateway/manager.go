@@ -9,17 +9,19 @@ import (
 	"github.com/FANGDEI/simplebank/ecrypto"
 	"github.com/FANGDEI/simplebank/store/cache"
 	"github.com/FANGDEI/simplebank/store/local"
+	"github.com/go-playground/validator/v10"
 	"github.com/iris-contrib/middleware/cors"
 	jardiniere "github.com/iris-contrib/middleware/jwt"
 	"github.com/kataras/iris/v12"
 )
 
 type Manager struct {
-	handler  *iris.Application
-	localer  *local.Manager
-	cacher   *cache.Manager
-	cryptoer *ecrypto.Manager
-	tokener  *jardiniere.Middleware
+	handler   *iris.Application
+	localer   *local.Manager
+	cacher    *cache.Manager
+	cryptoer  *ecrypto.Manager
+	tokener   *jardiniere.Middleware
+	validator *validator.Validate
 }
 
 func New() *Manager {
@@ -28,6 +30,7 @@ func New() *Manager {
 		localer:  C.Localer,
 		cacher:   C.Cacher,
 		cryptoer: C.Cryptoer,
+		validator: C.Validator,
 	}
 }
 
