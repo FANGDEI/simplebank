@@ -32,9 +32,8 @@ func (m *Manager) loadToken() {
 
 			ctx.StopExecution()
 			ctx.StatusCode(iris.StatusUnauthorized)
-			ctx.JSON(Result{
-				Succeed: false,
-				Msg:     err.Error(),
+			ctx.JSON(map[string]any{
+				"msg": err.Error(),
 			})
 		},
 	})
@@ -46,7 +45,7 @@ func newToken(id int, username string) (string, error) {
 	token := jardiniere.NewTokenWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":       id,
 		"username": username,
-		"iss":      "FANG",                                  // 签发人
+		"iss":      "FANG",                                   // 签发人
 		"iat":      t.Unix(),                                 // 签发时间
 		"exp":      t.Add(time.Minute * 60 * 24 * 15).Unix(), // 过期时间
 	})
