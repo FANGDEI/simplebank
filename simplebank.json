@@ -1,6 +1,6 @@
 {
     "cache": {
-        "addr": "localhost:6379",
+        "addr": "localhost:7779",
         "password": "ff1639579565"
     },
     "local": {
@@ -16,7 +16,7 @@
     },
     "gateway": {
         "host": "0.0.0.0",
-        "port": 80,
+        "port": 9999,
         "token_key": "simplebank"
     }
 }
