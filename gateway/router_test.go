@@ -3,9 +3,9 @@ package gateway
 import "github.com/kataras/iris/v12"
 
 func (m *Manager) RouteTest() {
-	m.handler.Get("/test", routerTest)
+	m.handler.Get("/test", m.routerTest)
 }
 
-func routerTest(ctx iris.Context) {
+func (m *Manager) routerTest(ctx iris.Context) {
 	ctx.JSON("test")
 }
