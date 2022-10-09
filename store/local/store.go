@@ -10,26 +10,18 @@ type Store struct {
 	handler *gorm.DB
 }
 
-func NewStore() (*Store, error) {
-	m, err := New()
-	if err != nil {
-		return nil, err
-	}
+func newStore(handler *gorm.DB) *Store {
 	return &Store{
-		handler: m.handler,
-	}, err
+		handler: handler,
+	}
 }
 
 // execTx use the function to execute transaction
 func (s *Store) execTx(fn func(*Manager) error) error {
 	tx := s.handler.Begin()
 
-	m, err := New()
-	if err != nil {
-		return err
-	}
-
-	err = fn(m)
+	m := new(tx)
+	err := fn(m)
 	if err != nil {
 		if rbErr := tx.Rollback().Error; rbErr != nil {
 			return fmt.Errorf("tx err: %v, rb err: %v", err, rbErr)

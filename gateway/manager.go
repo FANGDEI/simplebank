@@ -19,6 +19,7 @@ type Manager struct {
 	handler   *iris.Application
 	localer   *local.Manager
 	cacher    *cache.Manager
+	storer    *local.Store
 	cryptoer  *ecrypto.Manager
 	tokener   *jardiniere.Middleware
 	validator *validator.Validate
@@ -26,10 +27,11 @@ type Manager struct {
 
 func New() *Manager {
 	return &Manager{
-		handler:  iris.New(),
-		localer:  C.Localer,
-		cacher:   C.Cacher,
-		cryptoer: C.Cryptoer,
+		handler:   iris.New(),
+		localer:   C.Localer,
+		cacher:    C.Cacher,
+		storer:    C.Storer,
+		cryptoer:  C.Cryptoer,
 		validator: C.Validator,
 	}
 }

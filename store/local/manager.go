@@ -11,7 +11,7 @@ type Manager struct {
 	handler *gorm.DB
 }
 
-func New() (*Manager, error) {
+func New() (*Manager, *Store, error) {
 	db, err := gorm.Open(
 		postgres.Open(
 			fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s TimeZone=%s",
@@ -27,5 +27,11 @@ func New() (*Manager, error) {
 	)
 	return &Manager{
 		handler: db,
-	}, err
+	}, newStore(db), err
+}
+
+func new(handler *gorm.DB) *Manager {
+	return &Manager{
+		handler: handler,
+	}
 }

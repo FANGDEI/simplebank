@@ -12,6 +12,7 @@ import (
 
 type Config struct {
 	Cacher    *cache.Manager      `json:"-"`
+	Storer    *local.Store        `json:"-"`
 	Localer   *local.Manager      `json:"-"`
 	Cryptoer  *ecrypto.Manager    `json:"-"`
 	Validator *validator.Validate `json:"-"`
