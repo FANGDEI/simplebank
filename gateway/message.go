@@ -38,6 +38,8 @@ func (m *Manager) sendSimpleMessage(ctx iris.Context, code int, errs ...error) {
 		msg = "预处理失败"
 	case iris.StatusForbidden:
 		msg = "权限认证失败"
+	case iris.StatusUnauthorized:
+		msg = "用户认证失败"
 	default:
 		msg = "未知错误"
 	}

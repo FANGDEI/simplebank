@@ -39,11 +39,10 @@ func (m *Manager) loadToken() {
 	})
 }
 
-func newToken(id int, username string) (string, error) {
+func (m *Manager) newToken(username string) (string, error) {
 	t := time.Now()
 
 	token := jardiniere.NewTokenWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":       id,
 		"username": username,
 		"iss":      "FANG",                                   // 签发人
 		"iat":      t.Unix(),                                 // 签发时间
@@ -52,4 +51,8 @@ func newToken(id int, username string) (string, error) {
 
 	tokenString, err := token.SignedString([]byte(C.TokenKey))
 	return tokenString, err
+}
+
+func (m *Manager) getUsername(ctx iris.Context) string {
+	return string(ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)["username"].(string))
 }

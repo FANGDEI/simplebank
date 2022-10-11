@@ -39,9 +39,9 @@ func (m *Manager) GetAccountForUpdate(id int64) (Account, error) {
 	return account, err
 }
 
-func (m *Manager) ListAccounts(limit, offset int) ([]Account, error) {
+func (m *Manager) ListAccounts(owner string, limit, offset int) ([]Account, error) {
 	list := make([]Account, 0)
-	err := m.handler.Table(accounts).Limit(limit).Offset(offset).Order("id").Find(&list).Error
+	err := m.handler.Table(accounts).Where("owner = ?", owner).Limit(limit).Offset(offset).Order("id").Find(&list).Error
 	return list, err
 }
 

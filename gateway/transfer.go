@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/FANGDEI/simplebank/store/local"
@@ -16,7 +17,10 @@ type transferMessage struct {
 }
 
 func (m *Manager) RouteTransfer() {
-	m.handler.Post("/transfers", m.createTransfer)
+	m.handler.PartyFunc("/transfers", func(p iris.Party) {
+		p.Use(m.tokener.Serve)
+		p.Post("/", m.createTransfer)
+	})
 }
 
 func (m *Manager) createTransfer(ctx iris.Context) {
@@ -26,11 +30,19 @@ func (m *Manager) createTransfer(ctx iris.Context) {
 		return
 	}
 
-	if !m.validAccount(ctx, msg.FromAccountID, msg.Currency) {
+	fromAccount, valid := m.validAccount(ctx, msg.FromAccountID, msg.Currency)
+	if !valid {
 		return
 	}
 
-	if !m.validAccount(ctx, msg.ToAccountID, msg.Currency) {
+	if fromAccount.Owner != m.getUsername(ctx) {
+		err := errors.New("from account doesn't belong to the authenticated user")
+		m.sendSimpleMessage(ctx, iris.StatusUnauthorized, err)
+		return
+	}
+
+	_, valid = m.validAccount(ctx, msg.FromAccountID, msg.Currency)
+	if !valid {
 		return
 	}
 
@@ -49,17 +61,17 @@ func (m *Manager) createTransfer(ctx iris.Context) {
 	})
 }
 
-func (m *Manager) validAccount(ctx iris.Context, accountID int64, currency string) bool {
+func (m *Manager) validAccount(ctx iris.Context, accountID int64, currency string) (local.Account, bool) {
 	account, err := m.localer.GetAccount(accountID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			m.sendJson(ctx, iris.StatusNotFound, map[string]any{
 				"msg": err.Error(),
 			})
-			return false
+			return account, false
 		}
 		m.sendSimpleMessage(ctx, iris.StatusInternalServerError, err)
-		return false
+		return account, false
 	}
 
 	if account.Currency != currency {
@@ -67,7 +79,7 @@ func (m *Manager) validAccount(ctx iris.Context, accountID int64, currency strin
 		m.sendJson(ctx, iris.StatusBadRequest, map[string]any{
 			"msg": err.Error(),
 		})
-		return false
+		return account, false
 	}
-	return true
+	return account, true
 }

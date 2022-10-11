@@ -1,6 +1,8 @@
 package gateway
 
 import (
+	"errors"
+
 	"github.com/FANGDEI/simplebank/store/local"
 	"github.com/jackc/pgconn"
 	"github.com/kataras/iris/v12"
@@ -8,7 +10,6 @@ import (
 )
 
 type createAccountMessage struct {
-	Owner    string `json:"owner" validate:"required"`
 	Currency string `json:"currency" validate:"required,oneof=USD EUR CAD"`
 }
 
@@ -19,6 +20,7 @@ type listAccountMessage struct {
 
 func (m *Manager) RouteAccount() {
 	m.handler.PartyFunc("/accounts", func(p iris.Party) {
+		p.Use(m.tokener.Serve)
 		p.Post("/", m.createAccount)
 		// iris在进行id范围校验时不成功则会返回404
 		p.Get("/{id:int64 range(1, 9223372036854775807)}", m.getAccount)
@@ -40,7 +42,7 @@ func (m *Manager) createAccount(ctx iris.Context) {
 	}
 
 	account, err := m.localer.CreateAccount(local.Account{
-		Owner:    msg.Owner,
+		Owner:    m.getUsername(ctx),
 		Balance:  0,
 		Currency: msg.Currency,
 	})
@@ -77,6 +79,12 @@ func (m *Manager) getAccount(ctx iris.Context) {
 		return
 	}
 
+	if m.getUsername(ctx) != account.Owner {
+		err := errors.New("account doesn't belong to the authenticated user.")
+		m.sendSimpleMessage(ctx, iris.StatusUnauthorized, err)
+		return
+	}
+
 	m.sendJson(ctx, iris.StatusOK, map[string]any{
 		"data": account,
 	})
@@ -95,7 +103,7 @@ func (m *Manager) listAccount(ctx iris.Context) {
 		return
 	}
 
-	accounts, err := m.localer.ListAccounts(msg.PageSize, (msg.PageID-1)*msg.PageSize)
+	accounts, err := m.localer.ListAccounts(m.getUsername(ctx), msg.PageSize, (msg.PageID-1)*msg.PageSize)
 	if err != nil {
 		m.sendSimpleMessage(ctx, iris.StatusInternalServerError, err)
 		return
