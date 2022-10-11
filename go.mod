@@ -9,6 +9,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/iris-contrib/middleware/cors v0.0.0-20221004221944-7386a93ab90a
 	github.com/iris-contrib/middleware/jwt v0.0.0-20221004221944-7386a93ab90a
+	github.com/jackc/pgconn v1.13.0
 	github.com/kataras/iris/v12 v12.2.0-beta5
 	github.com/stretchr/testify v1.8.0
 	github.com/wumansgy/goEncrypt v1.1.0
@@ -36,7 +37,6 @@ require (
 	github.com/iris-contrib/jade v1.1.4 // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
-	github.com/jackc/pgconn v1.13.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
