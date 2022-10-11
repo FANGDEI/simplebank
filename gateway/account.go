@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"github.com/FANGDEI/simplebank/store/local"
+	"github.com/jackc/pgconn"
 	"github.com/kataras/iris/v12"
 	"gorm.io/gorm"
 )
@@ -44,6 +45,10 @@ func (m *Manager) createAccount(ctx iris.Context) {
 		Currency: msg.Currency,
 	})
 	if err != nil {
+		if _, ok := err.(*pgconn.PgError); ok {
+			m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
+			return
+		}
 		m.sendSimpleMessage(ctx, iris.StatusInternalServerError, err)
 		return
 	}
