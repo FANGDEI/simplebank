@@ -1,6 +1,10 @@
 server:
 	go run main.go
 
+run:
+	docker build -t simplebank .
+	docker run --name simplebank -d -p 9999:9999 simplebank:latest
+
 createdb:
 	docker exec -it postgres createdb --username=root --owner=root simple_bank
 
